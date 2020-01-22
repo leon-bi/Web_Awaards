@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-@login_required(login_url='/accoun  ts/login')
+@login_required(login_url='/accounts/login')
 def index(request):
     current_user = request.user
     current_profile = Profile.objects.filter(user=request.user) 
@@ -55,4 +55,16 @@ def review_form(request):
         rate = ReviewForm()
     return render(request,"index.html",{"rate":rate,"current_user":current_user})
     
-    
+
+def search_results(request):
+
+    if 'search' in request.GET and request.GET["search"]:
+        search_term = request.GET.get("search")
+        searched_articles = Project.search_by_title(search_term)
+        message = f"{search_term}"
+
+        return render(request, 'search.html',{"message":message,"projects": searched_articles})
+
+    else:
+        message = "You haven't searched for any term"
+        return render(request, 'search.html',{"message":message})
