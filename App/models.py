@@ -51,6 +51,11 @@ class Project(models.Model):
     pub_date= models.DateTimeField(auto_now_add=True)
     live_site= models.URLField(max_length=300,blank=True)
     objects = models.Manager()
+
+    @classmethod
+    def search_by_title(cls,search_term):
+        project = cls.objects.filter(title__icontains=search_term)
+        return project
     
     class Meta:
         ordering = ['title']
